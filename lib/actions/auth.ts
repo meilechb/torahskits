@@ -68,6 +68,17 @@ export async function signup(
     return { error: error.message };
   }
 
+  // Accounts are auto-confirmed (see auto_confirm_user trigger), so sign the
+  // user in right away to establish a session instead of waiting on email.
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+  if (signInError) {
+    // Account was created but auto sign-in failed — send them to log in.
+    redirect("/login");
+  }
+
   revalidatePath("/", "layout");
   redirect("/dashboard");
 }
