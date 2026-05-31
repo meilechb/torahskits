@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { youtubeEmbed, youtubeThumb } from "@/lib/types";
+import { youtubeEmbed } from "@/lib/types";
 import { PlayIcon } from "./icons";
+import { YtThumb } from "./yt-thumb";
 
 /**
  * Click-to-load YouTube embed in the parchment "video" frame.
@@ -20,7 +21,6 @@ export function YouTubeEmbed({
   duration?: string | null;
 }) {
   const [playing, setPlaying] = useState(false);
-  const thumb = youtubeThumb(youtubeId);
 
   return (
     <div className="video hero-video">
@@ -37,10 +37,8 @@ export function YouTubeEmbed({
           className="poster"
           onClick={() => setPlaying(true)}
           aria-label={`Play${title ? `: ${title}` : ""}`}
-          style={
-            thumb ? { backgroundImage: `url(${thumb})` } : undefined
-          }
         >
+          <YtThumb id={youtubeId} alt={title || ""} />
           <span className="play-btn">
             <PlayIcon size={32} />
           </span>
