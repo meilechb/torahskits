@@ -10,8 +10,9 @@ import { CHUMASHIM } from "@/lib/types";
 
 export default async function Home() {
   const skits = await getLiveSkits(5);
-  const [hero, ...rest] = skits;
-  const library = rest.slice(0, 4);
+  const mostRecent = await getMostRecentSkit();
+  const hero = mostRecent ?? skits[0];
+  const library = skits.filter((s) => s.id !== hero?.id).slice(0, 4);
   const counts = await getChumashCounts();
   const total = Object.values(counts).reduce((a, b) => a + b, 0);
   const kitHref = hero ? `/skit/${hero.slug}` : "/login";
