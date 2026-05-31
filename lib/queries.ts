@@ -14,8 +14,19 @@ export async function getLiveSkits(limit?: number): Promise<Skit[]> {
   return data ?? [];
 }
 
-/** A single live skit by slug, with its kit files. Returns null if not found. */
-export async function getSkitBySlug(slug: string): Promise<SkitWithKit | null> {
+/** The most recently uploaded live skit (newest by created_at) — used for the home hero. */
+export async function getMostRecentSkit(): Promise<Skit | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("skits")
+    .select("*")
+    .eq("status", "live")
+    .order("created_at", { ascending: false })
+    .limit(1);
+  return data?.[0] ?? null;
+}
+
+/** A single live skit by slug, with its kit files. Returns null if not found. */export async function getSkitBySlug(slug: string): Promise<SkitWithKit | null> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("skits")

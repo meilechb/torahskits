@@ -5,7 +5,7 @@ import { SkitCard } from "@/components/skit-card";
 import { YouTubeEmbed } from "@/components/youtube-embed";
 import { NewsletterForm } from "@/components/newsletter-form";
 import { PlayIcon } from "@/components/icons";
-import { getLiveSkits, getChumashCounts } from "@/lib/queries";
+import { getLiveSkits, getChumashCounts, getMostRecentSkit } from "@/lib/queries";
 import { CHUMASHIM } from "@/lib/types";
 
 export default async function Home() {
