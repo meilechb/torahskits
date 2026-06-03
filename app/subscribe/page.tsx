@@ -2,10 +2,14 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { BillingToggle } from "@/components/billing-toggle";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Subscribe — Torah Skits",
-};
+export const metadata = pageMetadata({
+  title: "Subscribe — Recreate It with your class",
+  description:
+    "Subscribe to unlock the full recreate kit for every parsha skit — printable scripts, costume & prop lists, and director's notes. Plans for rebbeim, moros, and whole schools.",
+  path: "/subscribe",
+});
 
 export default async function SubscribePage() {
   return (

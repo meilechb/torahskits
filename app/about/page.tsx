@@ -1,10 +1,14 @@
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "About — Torah Skits",
-};
+export const metadata = pageMetadata({
+  title: "About",
+  description:
+    "Torah Skits began in one classroom and grew into a weekly parsha skit watched at Shabbos tables everywhere. Meet the rebbi and the story behind the skits.",
+  path: "/about",
+});
 
 export default async function AboutPage() {
   return (

@@ -3,12 +3,13 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getSkitBySlug, getRelatedSkits } from "@/lib/queries";
 import { getCurrentProfile } from "@/lib/auth";
-import { formatDate, hasKitAccess } from "@/lib/types";
+import { formatDate, hasKitAccess, youtubeThumb } from "@/lib/types";
 import type { KitFileType } from "@/lib/types";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SkitCard } from "@/components/skit-card";
 import { YouTubeEmbed } from "@/components/youtube-embed";
+import { SITE_URL, SITE_NAME, pageMetadata, jsonLd } from "@/lib/seo";
 
 const KIT_ICONS: Record<KitFileType, string> = {
   script: "📄",
@@ -23,12 +24,22 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const skit = await getSkitBySlug(slug);
-  if (!skit) return { title: "Skit not found — Torah Skits" };
-  return {
-    title: `${skit.title} — Torah Skits`,
-    description:
-      skit.description || `A parsha skit for Parshas ${skit.parsha}.`,
-  };
+  if (!skit) return { title: "Skit not found", robots: { index: false } };
+
+  const description =
+    skit.description ||
+    `Watch the Parshas ${skit.parsha} skit${
+      skit.performed_by ? `, performed by ${skit.performed_by}` : ""
+    } — free on Torah Skits. Subscribe for the recreate kit.`;
+  const image = skit.thumbnail_url || youtubeThumb(skit.youtube_id) || undefined;
+
+  return pageMetadata({
+    title: `${skit.title} — Parshas ${skit.parsha}`,
+    description,
+    path: `/skit/${skit.slug}`,
+    type: "video.other",
+    images: image ? [image] : undefined,
+  });
 }
 
 export default async function SkitDetailPage({
@@ -45,35 +56,103 @@ export default async function SkitDetailPage({
 
   const canDownload = hasKitAccess(profile?.role);
   const related = await getRelatedSkits(skit.id, 4);
+  const thumb = skit.thumbnail_url || youtubeThumb(skit.youtube_id);
+
+  // ----- Structured data: VideoObject + breadcrumbs -----
+  const videoLd = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: skit.title,
+    description:
+      skit.description || `A parsha skit for Parshas ${skit.parsha}.`,
+    thumbnailUrl: thumb ? [thumb] : undefined,
+    uploadDate: skit.release_date || skit.created_at,
+    contentUrl: skit.youtube_id
+      ? `https://www.youtube.com/watch?v=${skit.youtube_id}`
+      : undefined,
+    embedUrl: skit.youtube_id
+      ? `https://www.youtube-nocookie.com/embed/${skit.youtube_id}`
+      : undefined,
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+  };
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "All Skits",
+        item: `${SITE_URL}/browse`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: skit.title,
+        item: `${SITE_URL}/skit/${skit.slug}`,
+      },
+    ],
+  };
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLd(videoLd)}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLd(breadcrumbLd)}
+      />
       <SiteHeader active="browse" />
+
+      {/* ============ BIG VIDEO HEADER ============ */}
+      <section className="skit-hero wrap">
+        <div className="crumbs">
+          <Link href="/">Home</Link> / <Link href="/browse">All Skits</Link> /{" "}
+          {skit.parsha}
+        </div>
+        <div className="kicker">
+          Parshas {skit.parsha}
+          {skit.issue_number ? ` · Issue №${skit.issue_number}` : ""}
+          {skit.hebrew_date ? ` · ${skit.hebrew_date}` : ""}
+        </div>
+        <h1>{skit.title}</h1>
+        <div className="submeta">
+          Parshas {skit.parsha} · {formatDate(skit.release_date)}
+          {skit.performed_by ? ` · performed by ${skit.performed_by}` : ""}
+        </div>
+
+        {skit.youtube_id ? (
+          <YouTubeEmbed
+            youtubeId={skit.youtube_id}
+            title={skit.title}
+            tag={`Parshas ${skit.parsha}`}
+            duration={skit.duration}
+          />
+        ) : (
+          <div className="video hero-video">
+            <div className="poster">
+              <span className="tag">Parshas {skit.parsha}</span>
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* ============ DETAILS + KIT ============ */}
       <div className="wrap">
         <div className="skit-layout">
           <div className="skit-main">
-            <div className="crumbs">
-              <Link href="/">Home</Link> / <Link href="/browse">All Skits</Link>{" "}
-              / {skit.parsha}
-            </div>
-
-            {skit.youtube_id && (
-              <YouTubeEmbed
-                youtubeId={skit.youtube_id}
-                title={skit.title}
-                tag={`Parshas ${skit.parsha}`}
-                duration={skit.duration}
-              />
-            )}
-
-            <h1>{skit.title}</h1>
-            <div className="submeta">
-              Parshas {skit.parsha} · {formatDate(skit.release_date)}
-              {skit.performed_by ? ` · performed by ${skit.performed_by}` : ""}
-            </div>
-
             {skit.description && (
-              <div className="skit-desc">{skit.description}</div>
+              <>
+                <div className="rule left">about this skit</div>
+                <div className="skit-desc">{skit.description}</div>
+              </>
             )}
 
             {skit.skit_cast && (

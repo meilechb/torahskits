@@ -7,6 +7,12 @@ import { NewsletterForm } from "@/components/newsletter-form";
 import { PlayIcon } from "@/components/icons";
 import { getLiveSkits, getChumashCounts, getMostRecentSkit } from "@/lib/queries";
 import { CHUMASHIM } from "@/lib/types";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata = pageMetadata({
+  title: "Torah Skits — A new parsha skit every week",
+  path: "/",
+});
 
 export default async function Home() {
   const skits = await getLiveSkits(5);

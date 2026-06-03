@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import { Frank_Ruhl_Libre, Karla } from "next/font/google";
 import "./globals.css";
+import {
+  SITE_URL,
+  SITE_NAME,
+  DEFAULT_DESCRIPTION,
+  SITE_KEYWORDS,
+  jsonLd,
+} from "@/lib/seo";
 
 const frankRuhl = Frank_Ruhl_Libre({
   subsets: ["latin", "hebrew"],
@@ -17,18 +24,54 @@ const karla = Karla({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://torahskits.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Torah Skits — A new parsha skit every week",
     template: "%s — Torah Skits",
   },
-  description:
-    "A new parsha skit every week — to watch with your family, and to recreate with your class. Free to watch; subscribe for the full recreate kit.",
+  description: DEFAULT_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: SITE_KEYWORDS,
+  authors: [{ name: SITE_NAME }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  alternates: { canonical: "/" },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
   openGraph: {
     title: "Torah Skits — A new parsha skit every week",
-    description:
-      "A new parsha skit every week — to watch with your family, and to recreate with your class.",
+    description: DEFAULT_DESCRIPTION,
+    url: SITE_URL,
+    siteName: SITE_NAME,
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Torah Skits — A new parsha skit every week",
+    description: DEFAULT_DESCRIPTION,
+  },
+};
+
+const orgLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: SITE_NAME,
+  url: SITE_URL,
+  logo: `${SITE_URL}/opengraph-image`,
+  description: DEFAULT_DESCRIPTION,
+};
+const siteLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE_NAME,
+  url: SITE_URL,
+  potentialAction: {
+    "@type": "SearchAction",
+    target: `${SITE_URL}/browse?q={search_term_string}`,
+    "query-input": "required name=search_term_string",
   },
 };
 
@@ -37,6 +80,16 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${frankRuhl.variable} ${karla.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={jsonLd(orgLd)}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={jsonLd(siteLd)}
+        />
+      </head>
       <body>{children}</body>
     </html>
   );

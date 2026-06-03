@@ -3,7 +3,9 @@ import Link from "next/link";
 import { SignupForm } from "@/components/signup-form";
 
 export const metadata: Metadata = {
-  title: "Create your account — Torah Skits",
+  title: "Create your account",
+  description: "Create a free Torah Skits account to watch every weekly parsha skit.",
+  robots: { index: false, follow: false },
 };
 
 export default function SignupPage() {

@@ -3,7 +3,9 @@ import Link from "next/link";
 import { LoginForm } from "@/components/login-form";
 
 export const metadata: Metadata = {
-  title: "Log in — Torah Skits",
+  title: "Log in",
+  description: "Log in to your Torah Skits account.",
+  robots: { index: false, follow: false },
 };
 
 export default async function LoginPage({

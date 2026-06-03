@@ -1,10 +1,14 @@
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SubmitForm } from "@/components/submit-form";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Submit your skit — Torah Skits",
-};
+export const metadata = pageMetadata({
+  title: "Submit your skit",
+  description:
+    "Recreated a parsha skit with your class? Send us your video — we'll feature classroom recreations from rebbeim and moros around the world.",
+  path: "/submit",
+});
 
 export default async function SubmitPage() {
   return (

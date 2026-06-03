@@ -2,12 +2,14 @@ import { getLiveSkits } from "@/lib/queries";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { BrowseGrid } from "@/components/browse-grid";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "All Skits — Torah Skits",
+export const metadata = pageMetadata({
+  title: "All Skits",
   description:
-    "Every parsha skit, newest first. Search by name or parsha, or filter by chumash.",
-};
+    "Browse every weekly parsha skit, newest first. Search by name or parsha, or filter by chumash — free to watch, with recreate kits for subscribers.",
+  path: "/browse",
+});
 
 export default async function BrowsePage({
   searchParams,

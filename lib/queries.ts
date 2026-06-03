@@ -26,7 +26,8 @@ export async function getMostRecentSkit(): Promise<Skit | null> {
   return data?.[0] ?? null;
 }
 
-/** A single live skit by slug, with its kit files. Returns null if not found. */export async function getSkitBySlug(slug: string): Promise<SkitWithKit | null> {
+/** A single live skit by slug, with its kit files. Returns null if not found. */
+export async function getSkitBySlug(slug: string): Promise<SkitWithKit | null> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("skits")

@@ -94,9 +94,7 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:900;line-height:1.08;letter-spa
 .card{text-decoration:none;color:inherit;display:block;}
 .card .th{aspect-ratio:16/10;border-radius:8px;background:linear-gradient(135deg,#cdbd9e,#b7a87f);position:relative;overflow:hidden;border:1px solid #d2c19c;}
 .card .th img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
-.card .th .pl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:.92;transition:opacity .15s,transform .15s;background:none;border:none;padding:0;cursor:pointer;width:100%;z-index:3;}
-.card .th iframe{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:4;}
-.card .card-link{text-decoration:none;color:inherit;display:block;}
+.card .th .pl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:.92;transition:opacity .15s,transform .15s;}
 .card:hover .th .pl{transform:scale(1.06);}
 .card .th .pl .play-btn{width:48px;height:48px;background:rgba(243,234,215,.94);box-shadow:0 4px 14px rgba(0,0,0,.25);}
 .card .th .num{position:absolute;left:10px;top:10px;background:rgba(44,37,25,.85);color:var(--paper);font-size:11px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:.03em;z-index:2;}
@@ -346,6 +344,13 @@ section.blk{padding:46px 0;}
 /* ============================================================
    SKIT DETAIL page
    ============================================================ */
+.skit-hero{padding:28px 0 8px;text-align:center;}
+.skit-hero .crumbs{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:14px;}
+.skit-hero .crumbs a{color:var(--burg);text-decoration:none;}
+.skit-hero .kicker{margin-bottom:10px;}
+.skit-hero h1{font-size:clamp(30px,5vw,50px);margin:8px auto 8px;max-width:900px;}
+.skit-hero .submeta{color:var(--ink-3);font-size:17px;font-family:var(--serif);font-style:italic;margin-bottom:24px;}
+.skit-hero .hero-video{max-width:920px;margin:0 auto;}
 .skit-layout{display:grid;grid-template-columns:1fr 340px;gap:40px;align-items:start;padding:36px 0 20px;}
 .skit-main .crumbs{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:14px;}
 .skit-main .crumbs a{color:var(--burg);text-decoration:none;}
